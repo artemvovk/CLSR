@@ -124,3 +124,10 @@ def randomizedSelect(array, sIdx, eIdx, i):
         return randomizedSelect(array, sIdx, pivot-1, i)
     else:
         return randomizedSelect(array, pivot+1, eIdx, i-k)
+
+def weightedMedian(warray):
+    warray.sort(key=lambda tup: tup[0])
+    sumW = 0
+    for item in warray:
+        sumW += item[1]
+    return sumW
