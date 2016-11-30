@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 from helpers import CLSR_logger, partition
 
+CLSR_logger.curMod(__file__)
+
 def linearSearch(array, find):
     CLSR_logger.info("Linear Searching for %r" % find)
     for j in range(0, len(array)-1):

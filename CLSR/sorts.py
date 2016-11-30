@@ -1,47 +1,39 @@
 #!/usr/bin/env python
+import math
+from helpers import CLSR_logger
 
-from helpers import CLSR_logger, merge, partition
+CLSR_logger.curMod(__name__)
 
-CLSR_logger.info('Started module %r' % __file__)
-
-def insertionSortAsc(array):
-    CLSR_logger.info("Insertion Sorting array of length %r to Ascending order" % len(array))
+def insertionSort(array, desc=False):
+    CLSR_logger.info("Insertion Sorting array")
     counter = 0
     i = 0
     for j in range(1, len(array)):
         counter += 1
         key = array.pop(j)
         i = j-1
-        while i >= 0 and array[i] > key:
-            counter += 1
-            # note that POP happens before INSERT so the index shifts!
-            array.insert(i, array.pop(i))
-            i = i-1
-        array.insert(i+1,key)
+        CLSR_logger.arraySelects(array, i, j)
+        if desc:
+            while i >= 0 and array[i] < key:
+                counter += 1
+                # note that POP happens before INSERT so the index shifts!
+                CLSR_logger.arraySelects(array, i, j)
+                array.insert(i, array.pop(i))
+                i = i-1
+            array.insert(i+1, key)
+        else:
+            while i >= 0 and array[i] > key:
+                counter += 1
+                # note that POP happens before INSERT so the index shifts!
+                CLSR_logger.arraySelects(array, i, j)                
+                array.insert(i, array.pop(i))
+                i = i-1
+            array.insert(i+1,key)
 
     CLSR_logger.info("Insertion sorted array of length %r" % len(array))
     CLSR_logger.info("Sorted the array in %r steps" % counter)
-    CLSR_logger.info("Which comes out to %r orders of length" % (math.log(counter, len(array))))
     CLSR_logger.info("Sorted array is: %r" % str(array))
-
-def insertionSortDesc(array):
-    CLSR_logger.info("Insertion Sorting array of length %r to Descending order" % len(array))
-    counter = 0
-    i = 0
-    for j in range(1, len(array)):
-        key = array.pop(j)
-        i = j-1
-        while i >= 0 and array[i] < key:
-            counter += 1
-            # note that POP happens before INSERT so the index shifts!
-            array.insert(i, array.pop(i))
-            i = i-1
-        array.insert(i+1, key)
-
-    CLSR_logger.info("Insertion sorted array of length %r" % len(array))
-    CLSR_logger.info("Sorted the array in %r steps" % counter)
-    CLSR_logger.info("Which comes out to %r orders of length" % (math.log(counter, len(array))))
-    CLSR_logger.info("Sorted array is: %r" % str(array))
+    return(array)
 
 def selectionSort(array):
     CLSR_logger.info("Selection Sorting array of length %r to Ascending order" % len(array))
@@ -62,8 +54,8 @@ def selectionSort(array):
         
     CLSR_logger.info("Select sorted array of length %r" % len(array))
     CLSR_logger.info("Sorted the array in %r steps" % counter)
-    CLSR_logger.info("Which comes out to %r orders of length" % (math.log(counter, len(array))))
     CLSR_logger.info("Sorted array is: %r" % str(array))
+    return(array)
 
 def bubbleSort(array):
     CLSR_logger.info("Bubble sorting array of length %r" % len(array))
@@ -78,7 +70,6 @@ def bubbleSort(array):
                 array[j] = swap2
     CLSR_logger.info("Bubble sorted array of length %r" % len(array))
     CLSR_logger.info("Sorted the array in %r steps" % counter)
-    CLSR_logger.info("Which comes out to %r orders of length" % (math.log(counter, len(array))))
     CLSR_logger.info("Sorted array is: %r" % str(array))
 
 def mergeSort(array):

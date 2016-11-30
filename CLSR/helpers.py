@@ -1,31 +1,50 @@
 #!/usr/bin/env python
 
-import logging, math, random
+# Setting up logger and colorizing for debug output
+import logging, types
+from colorama import init, Fore, Back, Style
 
-# Setting up logger for good output
-LOG_FORMAT = '\n==%(asctime)s in %(module)s:==\n%(message)s\n'
+
+LOG_FORMAT = '\n==' + Fore.YELLOW + '%(asctime)s' + Style.RESET_ALL + ' in ' + Style.BRIGHT + '%(funcName)s' + Style.RESET_ALL + '==\n%(message)s\n'
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 CLSR_logger = logging.getLogger(__file__)
 
+def curMod(self, moduleName):
+    self.info(Style.RESET_ALL +'Started module: ' + Fore.GREEN + '{}'.format(moduleName) + Style.RESET_ALL + ' ')
+
+def arraySelects(self, array, *indecies):
+    strArray = '['
+    for i in range(0, len(array)):
+         if i in indecies:
+             strArray += str(Style.BRIGHT + str(array[i])+Style.RESET_ALL)+','
+         else:
+             strArray += str(array[i])+','
+    strArray = strArray[:-1]+']'
+    self.info(strArray)
+
+CLSR_logger.arraySelects = types.MethodType(arraySelects, CLSR_logger)
+
+CLSR_logger.curMod = types.MethodType(curMod, CLSR_logger)
+
 
 # Random Array Generators:
+import math, random
 
-rand_array_100_pos = [50]
-rand_array_100_pos.extend([int(1000*random.random()) for i in range(99)])
+def getRandomArray(length=10, amp=100, neg=False, desc=False, weights=False):
+    returnArray = list()
+    if neg:        
+        returnArray.extend([int(amp*random.uniform(-1,1)) for i in range(length)])
+    else:
+        returnArray.extend([int(amp*random.uniform(0,1)) for i in range(length)])
+    if weights:
+        returnArray = [(x,y) for x in returnArray for y in [round(1*random.uniform(0,1), 3) for i in range(length)]]
+    if desc:
+        returnArray.sort(reverse=True)
+    CLSR_logger.info("Generated array: %r" % returnArray)
+    return(returnArray)
 
-rand_array_100_neg = [-50]
-rand_array_100_neg.extend([int(1000*random.uniform(0,-1)) for i in range(99)])
 
-rand_array_100_both = [-50]
-rand_array_100_both.extend([int(1000*random.uniform(1,-1)) for i in range(99)])
-
-rand_array_100_count = [int(100*random.random()) for i in range(100)]
-
-rand_array_100_weighted = list()
-weights = [int(100*random.random()) for i in range(100)]
-for i in rand_array_100_count:
-    for j in weights:
-        rand_array_100_weighted.append((rand_array_100_count[i], weights[j]))
+# Merge and Partition helpers
 
 def merge(array):
     #print("Merge sorting array of length %r" % len(array))
