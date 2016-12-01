@@ -1,7 +1,8 @@
 #!/usr/bin/env python
+import math
 from helpers import CLSR_logger, partition
 
-CLSR_logger.curMod(__file__)
+CLSR_logger.curMod(__name__)
 
 def linearSearch(array, find):
     CLSR_logger.info("Linear Searching for %r" % find)
@@ -12,48 +13,52 @@ def linearSearch(array, find):
     CLSR_logger.info("Not found")     
 
 
-def getMaxCrossSubarray(array):
-    CLSR_logger.info("Getting Crossing Subarray for %r" % array)
-    if len(array) == 1:
-        return array[0]
-    lsum = array[0]
+def getMaxCrossSubarray(array, low=0, mid=-1, high=-1):
+    CLSR_logger.info("Getting Crossing Subarray")
+    if high == -1:
+        high = len(array)
+    if mid == -1:
+        mid = math.ceil((low+high)/2)
+    lsum = -1*math.inf
     tsum = 0
     mleft = 0
-    for i in range(math.ceil(len(array)/2), 0, -1):
+    for i in range(mid, low-1, -1):
         tsum = tsum + array[i]
         if tsum > lsum:
             lsum = tsum
             mleft = i
-    rsum = array[0]
+    rsum = -1*math.inf
     tsum = 0
     mright = 0
-    for j in range(math.ceil(len(array)/2)+1, len(array)):
+    for j in range(mid, high):
         tsum = tsum + array[j]
         if tsum > rsum:
             rsum = tsum
             mright = j
-    CLSR_logger.info("We got max crossing subarray at %r to %r with sum of %r" % (mleft, mright, lsum+rsum))
-    return lsum+rsum
+    CLSR_logger.info("We got Max Crossing Subarray at %r to %r with sum of %r" % (mleft, mright, lsum+rsum))
+    return (mleft, mright, lsum+rsum)
 
-def getMaxSubarray(array):
-    CLSR_logger.info("Getting Max Subarray for %r" % array)
-    if len(array) == 1:
-        return array[0]
+def getMaxSubarray(array, low=0, high=-1):
+    CLSR_logger.info("Getting Max Subarray")
+    if high == -1:
+        high = len(array)
+    if high-low <= 1:
+        return (low, high, array[low])
     else:
-        midl = math.ceil(len(array)/2)
-        lsum = getMaxSubarray(array[:midl])
-        rsum = getMaxSubarray(array[midl:])
-        msum = getMaxCrossSubarray(array)
+        mIdx = math.ceil((low+high)/2)
+        lLow,lHigh,lSum = getMaxSubarray(array, 0, mIdx)
+        rLow,rHigh,rSum = getMaxSubarray(array, mIdx, high)
+        cLow,cHigh,cSum = getMaxCrossSubarray(array, low, mIdx, high)
 
-        if lsum >= rsum and lsum >= msum:
-            CLSR_logger.info("We got left sum at %r" % (lsum))
-            return lsum
-        elif rsum >= lsum and rsum >= msum:
-            CLSR_logger.info("We got right sum at %r" % (rsum))
-            return rsum
+        if lSum >= rSum and lSum >= cSum:
+            CLSR_logger.info("Middle Corssing array between {} and {} has sum of {}".format(lLow, lHigh, lSum))
+            return lLow, lHigh, lSum
+        elif rSum >= lSum and rSum >= cSum:
+            CLSR_logger.info("Middle Corssing array between {} and {} has sum of {}".format(rLow, rHigh, rSum))
+            return rLow, rHigh, rSum
         else:
-            CLSR_logger.info("We got mid sum at %r" % (msum))
-            return msum
+            CLSR_logger.info("Middle Corssing array between {} and {} has sum of {}".format(cLow, cHigh, cSum))
+            return cLow, cHigh, cSum
 
 def randomSearch(array, find):
     CLSR_logger.info("Random Searching for %r" % find)

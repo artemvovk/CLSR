@@ -12,18 +12,6 @@ CLSR_logger = logging.getLogger(__file__)
 def curMod(self, moduleName):
     self.info(Style.RESET_ALL +'Started module: ' + Fore.GREEN + '{}'.format(moduleName) + Style.RESET_ALL + ' ')
 
-def arraySelects(self, array, *indecies):
-    strArray = '['
-    for i in range(0, len(array)):
-         if i in indecies:
-             strArray += str(Style.BRIGHT + str(array[i])+Style.RESET_ALL)+','
-         else:
-             strArray += str(array[i])+','
-    strArray = strArray[:-1]+']'
-    self.info(strArray)
-
-CLSR_logger.arraySelects = types.MethodType(arraySelects, CLSR_logger)
-
 CLSR_logger.curMod = types.MethodType(curMod, CLSR_logger)
 
 
@@ -46,27 +34,18 @@ def getRandomArray(length=10, amp=100, neg=False, desc=False, weights=False):
 
 # Merge and Partition helpers
 
-def merge(array):
-    #print("Merge sorting array of length %r" % len(array))
-    counter = 0
-    if len(array) == 1:
-        return array
-    midl = math.ceil(len(array)/2)
-    larray = list(array[:midl])
-    rarray = list(array[midl:])
+def merge(array, sIdx, mIdx, eIdx):
+    larray = list(array[sIdx:mIdx])
+    rarray = list(array[mIdx:eIdx])
+    CLSR_logger.info("Merging\n{} \nwith\n{}".format(larray, rarray))
     larray.append(math.inf)
     rarray.append(math.inf)
-    
-    for i in range(0, len(array)):
-        counter += 1
-        if larray[0] < rarray[0] or math.isinf(rarray[0]):
+    for i in range(sIdx, eIdx):
+        if larray[0] <= rarray[0] or math.isinf(rarray[0]):
             array[i] = larray.pop(0)
         elif rarray[0] < larray[0] or math.isinf(larray[0]):
             array[i] = rarray.pop(0)
-    #print("Merge sorted array of length %r" % len(array))
-    #print("Sorted the array in %r steps" % counter)
-    #print("Which comes out to %r orders of length" % (math.log(counter, len(array))))
-    #print("Sorted array is: %r" % str(array))
+    CLSR_logger.info("Merged array is: %r" % str(array))
     return(array)
 
 def partition(array, sIdx, eIdx):
