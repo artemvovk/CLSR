@@ -14,6 +14,9 @@ def curMod(self, moduleName):
 
 CLSR_logger.curMod = types.MethodType(curMod, CLSR_logger)
 
+CLSR_logger.info("CLSR_logger started")
+CLSR_logger.curMod(__name__)
+
 
 # Random Array Generators:
 import math, random
@@ -50,23 +53,15 @@ def merge(array, sIdx, mIdx, eIdx):
 
 def partition(array, sIdx, eIdx):
     
-    lIdx = sIdx
-    rIdx = eIdx
-    iIdx = sIdx+int((eIdx-sIdx)*random.random())
+    iIdx = random.randint(sIdx,eIdx)
 
-    x = array[iIdx]
-    r = array[rIdx]
-
-    array[iIdx], array[rIdx] = r, x
-
+    array[eIdx], array[iIdx] = array[iIdx], array[eIdx]
 
     x = array[eIdx]
-    print("Our pivot is %r" % (x))
     i = sIdx-1
-    for j in range(sIdx, rIdx+1):
+    for j in range(sIdx, eIdx):
         if array[j] < x:
             i+=1
             array[i], array[j] = array[j], array[i]
-    array[i+1], array[rIdx] = array[rIdx], array[i+1]
-    print("Pivot now at %r" % (i+1))
-    return(i+1)
+    array[i+1], array[eIdx] = array[eIdx], array[i+1]
+    return (i+1)
