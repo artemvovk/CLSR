@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import math
-from helpers import CLSR_logger, partition
+from .helpers import CLSR_logger, partition
 
 CLSR_logger.curMod(__name__)
 

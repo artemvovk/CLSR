@@ -22,15 +22,20 @@ CLSR_logger.curMod(__name__)
 import math, random
 
 def getRandomArray(length=10, amp=100, neg=False, desc=False, weights=False):
+
     returnArray = list()
+
     if neg:        
         returnArray.extend([int(amp*random.uniform(-1,1)) for i in range(length)])
     else:
         returnArray.extend([int(amp*random.uniform(0,1)) for i in range(length)])
+
     if weights:
         returnArray = [(x,y) for x in returnArray for y in [round(1*random.uniform(0,1), 3) for i in range(length)]]
+
     if desc:
         returnArray.sort(reverse=True)
+
     CLSR_logger.info("Generated array: %r" % returnArray)
     return(returnArray)
 
@@ -38,30 +43,37 @@ def getRandomArray(length=10, amp=100, neg=False, desc=False, weights=False):
 # Merge and Partition helpers
 
 def merge(array, sIdx, mIdx, eIdx):
+
     larray = list(array[sIdx:mIdx])
     rarray = list(array[mIdx:eIdx])
     CLSR_logger.info("Merging\n{} \nwith\n{}".format(larray, rarray))
+
     larray.append(math.inf)
     rarray.append(math.inf)
+
     for i in range(sIdx, eIdx):
         if larray[0] <= rarray[0] or math.isinf(rarray[0]):
             array[i] = larray.pop(0)
         elif rarray[0] < larray[0] or math.isinf(larray[0]):
             array[i] = rarray.pop(0)
+
     CLSR_logger.info("Merged array is: %r" % str(array))
     return(array)
 
 def partition(array, sIdx, eIdx):
-    
-    iIdx = random.randint(sIdx,eIdx)
 
+    # Select random index and switch it with last index
+    iIdx = random.randint(sIdx,eIdx)
     array[eIdx], array[iIdx] = array[iIdx], array[eIdx]
 
+    
     x = array[eIdx]
     i = sIdx-1
+
     for j in range(sIdx, eIdx):
-        if array[j] < x:
+        if array[j] <= x:
             i+=1
             array[i], array[j] = array[j], array[i]
+
     array[i+1], array[eIdx] = array[eIdx], array[i+1]
     return (i+1)

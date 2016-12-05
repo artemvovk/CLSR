@@ -1,1 +1,4 @@
+-e git+git@github.com:kierachell/CLSR.git@70580a02bb7a9c2670d4d514798567b1cb4a42cd#egg=CLSR
 colorama==0.3.7
+py==1.4.31
+pytest==3.0.5

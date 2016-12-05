@@ -1,0 +1,12 @@
+CLSR/__init__.py
+CLSR/__main__.py
+CLSR/algos.py
+CLSR/dataStructures.py
+CLSR/helpers.py
+CLSR/randomizers.py
+CLSR/searches.py
+CLSR/sorts.py
+CLSR.egg-info/PKG-INFO
+CLSR.egg-info/SOURCES.txt
+CLSR.egg-info/dependency_links.txt
+CLSR.egg-info/top_level.txt

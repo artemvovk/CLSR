@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import math
-from helpers import CLSR_logger, merge
+from .helpers import CLSR_logger, merge
 
 CLSR_logger.curMod(__name__)
 
@@ -35,12 +35,15 @@ class Heap():
         self.heapType = 'Max'
         l = self.leftChild(i)
         r = self.rightChild(i)
+
         if l and self.nodes[l] > self.nodes[i]:
             largest = l
         else:
             largest = i
+
         if r and self.nodes[r] > self.nodes[largest]:
             largest = r
+
         if largest != i:
             self.nodes[i], self.nodes[largest] = self.nodes[largest], self.nodes[i]
             self.maxHeapify(largest)
@@ -56,12 +59,15 @@ class Heap():
         self.heapType = 'Min'
         l = self.leftChild(i)
         r = self.rightChild(i)
+
         if l and self.nodes[l] < self.nodes[i]:
             smallest = l
         else:
             smallest = i
+
         if r and self.nodes[r] < self.nodes[smallest]:
             smallest = r
+
         if smallest != i:
             self.nodes[i], self.nodes[smallest] = self.nodes[smallest], self.nodes[i]
             self.minHeapify(smallest)
@@ -70,6 +76,7 @@ class Heap():
         if fromNodes:
             self.nodes = fromNodes
             self.heapSize = len(fromNodes)
+
         for i in range(self.heapSize//2, -1, -1):
             self.minHeapify(i)
     
@@ -84,9 +91,11 @@ class Heap():
     def popMax(self):
         if self.heapSize == 1:
             return self.nodes.pop()
+
         self.buildMaxHeap()
         self.nodes[0], self.nodes[self.heapSize-1] = self.nodes[self.heapSize-1], self.nodes[0]
         self.heapSize -= 1
+
         heapMax = self.nodes.pop(self.heapSize)
         self.maxHeapify()
         return heapMax
@@ -94,9 +103,11 @@ class Heap():
     def popMin(self):
         if self.heapSize == 1:
             return self.nodes.pop()
+
         self.buildMinHeap()
         self.nodes[0], self.nodes[self.heapSize-1] = self.nodes[self.heapSize-1], self.nodes[0]
         self.heapSize -= 1
+
         heapMin = self.nodes.pop(self.heapSize)
         self.minHeapify()
         return heapMin
@@ -107,6 +118,7 @@ class Heap():
             while i and self.nodes[self.parent(i)] > self.nodes[i]:
                 self.nodes[i], self.nodes[self.parent(i)] = self.nodes[self.parent(i)], self.nodes[i]
                 i = self.parent(i)
+
         else:
             self.nodes[i] = newValue
             while i and self.nodes[self.parent(i)] < self.nodes[i]:
