@@ -4,6 +4,7 @@ from .helpers import CLSR_logger, partition
 
 CLSR_logger.curMod(__name__)
 
+
 def linearSearch(array, find):
     CLSR_logger.info("Linear Searching for %r" % find)
     for j in range(0, len(array)-1):
@@ -120,17 +121,19 @@ def findMinMax(array):
                 mMax = array[i]
     return (mMin, mMax)
                 
-def randomizedSelect(array, sIdx, eIdx, i):
+def randomizedSelect(array, sIdx=0, eIdx=-1, i=0):
+    if eIdx == -1:
+        eIdx = len(array)
     if sIdx == eIdx:
         return array[0]
-    pivot = helpers.partition(array, sIdx, eIdx)
-    k = pivot-sIdx+1
+    pivot = partition(array, sIdx, eIdx)
+    k = pivot-sIdx
     if i == k:
         return array[pivot]
     elif i < k:
         return randomizedSelect(array, sIdx, pivot-1, i)
     else:
-        return randomizedSelect(array, pivot+1, eIdx, i-k)
+        return randomizedSelect(array, pivot, eIdx, i-k)
 
 def weightedMedian(warray):
     warray.sort(key=lambda tup: tup[0])

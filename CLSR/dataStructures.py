@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import math
-from .helpers import CLSR_logger, merge
+import math, random
+from .helpers import *
 
 CLSR_logger.curMod(__name__)
 
@@ -146,3 +146,122 @@ class Heap():
             self.nodes.pop(index)
             self.maxHeapify(index-1)
             
+
+class Stack():
+    def __init__(self, size):
+        self.items = [None]*size
+        self.top = -1
+
+    def isEmpty(self):
+        return self.top == -1
+
+    def push(self, item):
+        if self.top == len(self.items)-1:
+            return False
+        self.top += 1
+        self.items[self.top] = item
+        return True
+
+    def pop(self):
+        if self.isEmpty():
+            return False
+        else:
+            x = self.items[self.top]
+            self.items[self.top] = None
+            self.top -= 1
+            return x
+
+class Queue():
+    def __init__(self, size):
+        self.items = [None]*size
+        self.head = 0
+        self.tail = 0
+
+    def enqueue(self, item):
+        if self.tail == len(self.items):
+            self.tail = 0
+        if self.items[self.tail]:
+            return False
+        self.items[self.tail] = item
+        self.tail+=1
+        return True
+
+    def dequeue(self):
+        if not self.items[self.head]:
+            return False
+        item = self.items[self.head]
+        self.items[self.head] = None
+        if self.head == len(self.items)-1:
+            self.head = 0
+        else:
+            self.head += 1
+        return item
+
+class LLHead():
+    def __init__(self, val):
+        self.val = val
+        self.ne = None
+        self.pr = None
+
+    def listSearch(self, key):
+        x = self.key
+        while x and self.key != key:
+            x = self.ne
+        return x
+
+    def listInsert(self, val):
+        x = LLHead(val)
+        x.ne = self
+        self.pr = x
+
+    def listDelete(self, key):
+        x = self.listSearch(key)
+        if x.pr:
+            x.pr.ne = x.ne
+        else:
+            self = x.ne
+        if x.ne:
+            x.ne.pr = x.pr
+
+class HashTable():
+    def __init__(self, size, hashtype = "unihash", probeType = "doublehash"):
+        self.table = [None]*size
+        self.mod = size
+        self.hashf = self.makeHahsFunc(hashtype)
+        self.probe = self.makeProbeFunc(probeType)
+
+    def makeHahsFunc(self, hashtype = "unihash"):
+        if hashtype == "multiply":
+            A = random.uniform(0,1)
+            return lambda x: math.floor(self.mod*(x*A-math.floor(x*A)))
+        elif hashtype == "divide":
+            return lambda x: x%self.mod
+        elif hashtype == "unihash":
+            primes = [i for i in range(self.mod-1, 2**self.mod) if isPrime(i)]
+            p = random.choice(primes)
+            a = random.randint(1, p)
+            b = random.randint(0,p-1)
+            return lambda x: ((a*x+b)%p)%self.mod
+        return lambda x: x%self.mod
+
+    def makeProbeFunc(self, probeType = "doublehash"):
+        if probeType == "linear":
+            return lambda key, i: (self.hashf(key)+i) % self.mod
+        elif probeType == "quadratic":
+            quadProbeConst = (random.randint(0,self.mod), random.randint(1, self.mod-1))
+            return lambda key, i: (self.hashf(key)+quadProbeConst[0]*i+quadProbeConst[1]*i*i)%self.mod
+        elif probeType == "doublehash":
+            return lambda key, i: (self.hashf(key) + i*self.hashf(key))%self.mod
+        return lambda key, i: (key+i)%self.mod
+
+    def insert(self, key):
+        loc = self.hashf(key)
+        if not self.table[loc]:
+            self.table[loc] = key
+            return True
+        elif type(self.table[loc]) == list:
+            self.table[loc].append(key)
+            return True
+        else:
+            self.table[loc] = [key, self.table[loc]]
+            return True

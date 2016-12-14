@@ -41,7 +41,6 @@ def getRandomArray(length=10, amp=100, neg=False, desc=False, weights=False):
 
 
 # Merge and Partition helpers
-
 def merge(array, sIdx, mIdx, eIdx):
 
     larray = list(array[sIdx:mIdx])
@@ -77,3 +76,12 @@ def partition(array, sIdx, eIdx):
 
     array[i+1], array[eIdx] = array[eIdx], array[i+1]
     return (i+1)
+
+def isPrime(n):
+    if n==2 or n==3: return True
+    if n%2==0 or n<2: return False
+    for i in range(3,int(n**0.5)+1,2):
+        if n%i==0:
+            return False    
+
+    return True
