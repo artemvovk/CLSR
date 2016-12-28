@@ -265,3 +265,134 @@ class HashTable():
         else:
             self.table[loc] = [key, self.table[loc]]
             return True
+
+class Node():
+    def __init__(self, key, val, par = None, left = None, right = None):
+        self.key = key
+        self.val = val
+        self.par = par
+        self.left = left
+        self.right = right
+        
+class BST():
+    def __init__(self, root):
+        self.root = root
+
+    def inOrderTreeWalk(self, node):
+        if node != None:
+            self.inOrderTreeWalk(node.left)
+            print(node.key)
+            self.inOrderTreeWalk(node.right)
+
+    def inOrderTreeWalkIter(self, node):
+        sStack = [node]
+        cur = node
+        while cur.left:
+            cur = cur.left
+            sStack.append(cur)
+        while sStack:
+            cur = sStack.pop()
+            print(cur.key)
+            if cur.right:
+                cur = cur.right
+                while cur.left:
+                    sStack.append(cur.left)
+                    cur = cur.left
+
+    def treeSearch(self, key, node = None):
+        if not node:
+            node = self.root
+        if key == None or key == node.key:
+            return node
+        if k < node.key:
+            return self.treeSearch(key, node.left)
+        else:
+            return self.treeSearch(key, node.right)
+
+    def treeSearchIter(self, key, node = None):
+        if not node:
+            node = self.root
+        while node and key != node.key:
+            if key < node.key:
+                node = node.left
+            else:
+                node = node.right
+        return node
+
+    def treeMin(self, node = None):
+        if not node:
+            node = self.root
+        while node.left:
+            node = node.left
+        return node
+                
+    def treeMax(self, node = None):
+        if not node:
+            node = self.root
+        while node.right:
+            node = node.right
+        return node
+
+    def treeSucc(self, node = None):
+        if not node:
+            node = self.root
+        if node.right:
+            return self.treeMin(node.right)
+        succ = node.parent
+        while y and node == succ.right:
+            node = succ
+            succ = succ.par
+        return succ
+
+    def treePred(self, node = None):
+        if not node:
+            node = self.root
+        if node.left:
+            return self.treeMax(node.left)
+        pred = node.parent
+        while y and node == pred.left:
+            node = pred
+            pred = pred.par
+        return pred
+
+    def treeInsert(self, node):
+        pred = None
+        cur = self.root
+        while cur:
+            pred = cur
+            if node.key < cur.key:
+                cur = cur.left
+            else:
+                cur = cur.right
+        node.par = pred
+        if not pred:
+            self.root = node
+        elif node.key < pred.key:
+            pred.left = node
+        else:
+            pred.right = node
+
+    def transplant(self, dest, node):
+        if not dest.par:
+            self.root = node
+        elif dest == dest.par.left:
+            dest.par.left = node
+        else:
+            dest.par.right = node
+        if node:
+            node.par = dest.par
+
+    def treeDelete(self, node):
+        if not node.left:
+            self.transplant(node, node.right)
+        elif not node.right:
+            self.transplant(node, node.left)
+        else:
+            cur = self.treeMin(node.right)
+            if cur.par != node:
+                self.transplant(cur, cur.right)
+                cur.right = node.right
+                cur.right.par = cur
+            self.transplant(node, cur)
+            cur.left = node.left
+            cur.left.par = cur
